@@ -1,7 +1,6 @@
 import hmac
 import time
 import hashlib
-from binance_f.model.constant import WorkingType
 import requests
 import json
 from urllib.parse import urlencode
