@@ -223,6 +223,5 @@ def get_pair_precisions(pair="DOGEUSDT",verbose=False):
     return res['pricePrecision'], res['quantityPrecision']
 
 # print(get_account_balance_v2(symbol="USDT"))
-# pprint.pprint(get_exchange_info().symbols)
-# print(get_exchange_info()["symbols"])
+# pprint.pprint(get_exchange_info()["symbols"])
 # print(get_pair_precisions("DOGEUSDT"))
