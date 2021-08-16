@@ -1,0 +1,2 @@
+g_api_key = '4Eiv4LT3Ci85P4seGXIV7N4a4JrvUY3zNTar37MvC96HQPFaLaTjqiInv1NznQo6'
+g_secret_key = 'kZm9NdZ6cnh4q1DildKj7DJJL37K7Si58GvTeBvIgOORsEQ2lle1feCKGtvyMjJE'
