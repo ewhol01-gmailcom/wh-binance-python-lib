@@ -257,11 +257,11 @@ def AR(symbol="DOGEUSDT",interval="1d",timeperiod=12,verbose=False): #average ra
 # print(get_candlesticks(limit=2,interval='4h',workingType="CONTRACT_PRICE"))
 # print(AR(timeperiod=2))
 
-PAIR = "DOGEUSDT"
-TF = "1d"
-RISK = 0.5 #in percent of available balance
-SPARE = AR(symbol=PAIR,interval=TF)/25
-SIDE = "S"
+# PAIR = "DOGEUSDT"
+# TF = "1d"
+# RISK = 0.5 #in percent of available balance
+# SPARE = AR(symbol=PAIR,interval=TF)/25
+# SIDE = "S"
 
 # print(get_candlesticks(symbol=PAIR,interval=TF,limit=2)[-2])
 
@@ -279,29 +279,29 @@ SIDE = "S"
 # wh_send_order(symbol="DOGEUSDT",side="SELL",type="OPEN",price=op,quantity=1)#,verbose=True)
 # wh_send_order(symbol="DOGEUSDT",side="BUY",type="CLOSE",price=sl,quantity=1)#,verbose=True)
 
-blc = get_account_balance_v2(symbol="USDT")
-print("Curent balance=",blc)
-riskDollar = RISK*blc/100
-print("Risk$ =",riskDollar)
+# blc = get_account_balance_v2(symbol="USDT")
+# print("Curent balance=",blc)
+# riskDollar = RISK*blc/100
+# print("Risk$ =",riskDollar)
 
-c = get_candlesticks(symbol=PAIR,interval=TF,limit=2)[-2]
-op = float(c[2] if SIDE=="B" else c[3]) + (SPARE if SIDE=="B" else -SPARE)
-sl = float(c[3] if SIDE=="B" else c[2]) + (-SPARE if SIDE=="B" else SPARE)
+# c = get_candlesticks(symbol=PAIR,interval=TF,limit=2)[-2]
+# op = float(c[2] if SIDE=="B" else c[3]) + (SPARE if SIDE=="B" else -SPARE)
+# sl = float(c[3] if SIDE=="B" else c[2]) + (-SPARE if SIDE=="B" else SPARE)
 
 #discretionary op & sl
 # op = 0.6
 # sl = 0.1
 
-rangeRisk = abs(op-sl)
-positionSize = round(riskDollar/rangeRisk,quantityPrecision)
-print("positionSize =",positionSize)
+# rangeRisk = abs(op-sl)
+# positionSize = round(riskDollar/rangeRisk,quantityPrecision)
+# print("positionSize =",positionSize)
 
-print(op,sl)
-# sys.exit(99)
+# print(op,sl)
+# # sys.exit(99)
 
-if SIDE=="B":
-    wh_send_order(symbol=PAIR,side="BUY",type="OPEN",price=op,quantity=positionSize)#,verbose=True)
-    wh_send_order(symbol=PAIR,side="SELL",type="CLOSE",price=sl,quantity=positionSize)#,verbose=True)
-elif SIDE=="S":
-    wh_send_order(symbol=PAIR,side="SELL",type="OPEN",price=op,quantity=positionSize)#,verbose=True)
-    wh_send_order(symbol=PAIR,side="BUY",type="CLOSE",price=sl,quantity=positionSize)#,verbose=True)
+# if SIDE=="B":
+#     wh_send_order(symbol=PAIR,side="BUY",type="OPEN",price=op,quantity=positionSize)#,verbose=True)
+#     wh_send_order(symbol=PAIR,side="SELL",type="CLOSE",price=sl,quantity=positionSize)#,verbose=True)
+# elif SIDE=="S":
+#     wh_send_order(symbol=PAIR,side="SELL",type="OPEN",price=op,quantity=positionSize)#,verbose=True)
+#     wh_send_order(symbol=PAIR,side="BUY",type="CLOSE",price=sl,quantity=positionSize)#,verbose=True)
