@@ -236,6 +236,8 @@ def get_candlesticks(symbol="DOGEUSDT",interval="1d",limit=1,workingType="MARK_P
     r = send_signed_request("GET","/fapi/v1/"+req,params)
     if verbose:
         print(r)
+    if limit==1:
+        return(r[0])
     return(r)
 
 def AR(symbol="DOGEUSDT",interval="1d",timeperiod=12,verbose=False): #average range
@@ -252,3 +254,24 @@ def AR(symbol="DOGEUSDT",interval="1d",timeperiod=12,verbose=False): #average ra
 
 # print(get_candlesticks(limit=2,interval='4h',workingType="CONTRACT_PRICE"))
 # print(AR(timeperiod=2))
+
+PAIR = "DOGEUSDT"
+TF = "1d"
+RISK = 0.5 #in percent of available balance
+SPARE = AR(symbol=PAIR,interval=TF)/25
+
+print(get_candlesticks(symbol=PAIR,interval=TF,limit=2)[-2])
+
+# open buy order on prev day hi+spare, SL = prev day lo-spare
+c = get_candlesticks(symbol=PAIR,interval=TF,limit=2)[-2]
+op = float(c[2])+SPARE
+sl = float(c[3])-SPARE
+print("ar =",SPARE,"op =",op,"sl =",sl)
+# wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=op,quantity=1)#,verbose=True)
+# wh_send_order(symbol="DOGEUSDT",side="SELL",type="CLOSE",price=sl,quantity=1)#,verbose=True)
+
+# open sell order on prev day lo-spare, SL = prev day hi+spare
+op,sl = sl,op
+print(op,sl)
+wh_send_order(symbol="DOGEUSDT",side="SELL",type="OPEN",price=op,quantity=1)#,verbose=True)
+wh_send_order(symbol="DOGEUSDT",side="BUY",type="CLOSE",price=sl,quantity=1)#,verbose=True)
