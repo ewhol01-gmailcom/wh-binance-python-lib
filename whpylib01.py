@@ -15,6 +15,9 @@ SECRET = config.g_secret_key
 BASE_URL = 'https://fapi.binance.com' # production base url
 # BASE_URL = 'https://testnet.binancefuture.com' # testnet base url
 
+quantityPrecision = 0
+pricePrecision = 0
+
 ''' ======  begin of functions, you don't need to touch ====== '''
 def hashing(query_string):
     return hmac.new(SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256).hexdigest()
@@ -189,7 +192,7 @@ def get_account_balance_v2(symbol="",simple=False,verbose=False):
     if symbol!="":
         for a in r:
             if a["asset"]==symbol:
-                return(a["availableBalance"])
+                return(float(a["availableBalance"]))
     if simple:
         b = []
         for a in r:
@@ -258,19 +261,47 @@ PAIR = "DOGEUSDT"
 TF = "1d"
 RISK = 0.5 #in percent of available balance
 SPARE = AR(symbol=PAIR,interval=TF)/25
+SIDE = "S"
 
-print(get_candlesticks(symbol=PAIR,interval=TF,limit=2)[-2])
+# print(get_candlesticks(symbol=PAIR,interval=TF,limit=2)[-2])
 
-# open buy order on prev day hi+spare, SL = prev day lo-spare
+# # open buy order on prev day hi+spare, SL = prev day lo-spare
+# c = get_candlesticks(symbol=PAIR,interval=TF,limit=2)[-2]
+# op = float(c[2])+SPARE
+# sl = float(c[3])-SPARE
+# print("ar =",SPARE,"op =",op,"sl =",sl)
+# # wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=op,quantity=1)#,verbose=True)
+# # wh_send_order(symbol="DOGEUSDT",side="SELL",type="CLOSE",price=sl,quantity=1)#,verbose=True)
+
+# # open sell order on prev day lo-spare, SL = prev day hi+spare
+# op,sl = sl,op
+# print(op,sl)
+# wh_send_order(symbol="DOGEUSDT",side="SELL",type="OPEN",price=op,quantity=1)#,verbose=True)
+# wh_send_order(symbol="DOGEUSDT",side="BUY",type="CLOSE",price=sl,quantity=1)#,verbose=True)
+
+blc = get_account_balance_v2(symbol="USDT")
+print("Curent balance=",blc)
+riskDollar = RISK*blc/100
+print("Risk$ =",riskDollar)
+
 c = get_candlesticks(symbol=PAIR,interval=TF,limit=2)[-2]
-op = float(c[2])+SPARE
-sl = float(c[3])-SPARE
-print("ar =",SPARE,"op =",op,"sl =",sl)
-# wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=op,quantity=1)#,verbose=True)
-# wh_send_order(symbol="DOGEUSDT",side="SELL",type="CLOSE",price=sl,quantity=1)#,verbose=True)
+op = float(c[2] if SIDE=="B" else c[3]) + (SPARE if SIDE=="B" else -SPARE)
+sl = float(c[3] if SIDE=="B" else c[2]) + (-SPARE if SIDE=="B" else SPARE)
 
-# open sell order on prev day lo-spare, SL = prev day hi+spare
-op,sl = sl,op
+#discretionary op & sl
+# op = 0.6
+# sl = 0.1
+
+rangeRisk = abs(op-sl)
+positionSize = round(riskDollar/rangeRisk,quantityPrecision)
+print("positionSize =",positionSize)
+
 print(op,sl)
-wh_send_order(symbol="DOGEUSDT",side="SELL",type="OPEN",price=op,quantity=1)#,verbose=True)
-wh_send_order(symbol="DOGEUSDT",side="BUY",type="CLOSE",price=sl,quantity=1)#,verbose=True)
+# sys.exit(99)
+
+if SIDE=="B":
+    wh_send_order(symbol=PAIR,side="BUY",type="OPEN",price=op,quantity=positionSize)#,verbose=True)
+    wh_send_order(symbol=PAIR,side="SELL",type="CLOSE",price=sl,quantity=positionSize)#,verbose=True)
+elif SIDE=="S":
+    wh_send_order(symbol=PAIR,side="SELL",type="OPEN",price=op,quantity=positionSize)#,verbose=True)
+    wh_send_order(symbol=PAIR,side="BUY",type="CLOSE",price=sl,quantity=positionSize)#,verbose=True)
