@@ -181,44 +181,6 @@ def wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0,quantity=0,wo
         print(r)
     return
 
-# previous version:
-# def wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0,quantity=0,workingType="MARK_PRICE/CONTRACT_PRICE",priceProtect="TRUE",verbose=False):
-#     pricePrecision, quantityPrecision = get_pair_precisions(symbol)
-#     cp = get_current_price()
-#     if side=="BUY":
-#         if type=="OPEN":
-#             if price<cp: #open buy below price
-#                 r = _wh_send_order(symbol="DOGEUSDT",side="BUY",positionSide="LONG",
-#                     type="TAKE_PROFIT_MARKET",quantity=quantity,stopPrice=price,verbose=verbose) #open order, buy below price
-#             elif price>cp: #open buy above price
-#                 r = _wh_send_order(symbol="DOGEUSDT",side="BUY",positionSide="LONG",
-#                     type="STOP_MARKET",quantity=quantity,stopPrice=price,verbose=verbose) #open order, buy above price
-#         elif type=="CLOSE":
-#             if price<cp: #close buy below price
-#                 r = _wh_send_order(symbol="DOGEUSDT",side="BUY",positionSide="SHORT",
-#                     type="TAKE_PROFIT_MARKET",quantity=quantity,stopPrice=price,verbose=verbose) #open order close short below price            
-#             elif price>cp: #close buy above price
-#                 r= _wh_send_order(symbol="DOGEUSDT",side="BUY",positionSide="SHORT",
-#                     type="STOP_MARKET",quantity=quantity,stopPrice=price,verbose=verbose) #open order close short above price    elif side=="SELL":
-#     elif side=="SELL":
-#         if type=="OPEN":
-#             if price<cp: #open sell below price
-#                 r = _wh_send_order(symbol="DOGEUSDT",side="SELL",positionSide="SHORT",
-#                     type="STOP_MARKET",quantity=quantity,stopPrice=price,verbose=verbose) #open order, sell below price
-#             elif price>cp: #open sell above price
-#                 r = _wh_send_order(symbol="DOGEUSDT",side="SELL",positionSide="SHORT",
-#                     type="TAKE_PROFIT_MARKET",quantity=quantity,stopPrice=price,verbose=verbose) #open order, sell above price
-#         elif type=="CLOSE":
-#             if price<cp: #close sell below price
-#                 r = _wh_send_order(symbol="DOGEUSDT",side="SELL",positionSide="LONG",
-#                     type="STOP_MARKET",quantity=quantity,stopPrice=price,verbose=verbose) #open order close long below price
-#             elif price>cp: #close sell above price
-#                 r = _wh_send_order(symbol="DOGEUSDT",side="SELL",positionSide="LONG",
-#                     type="TAKE_PROFIT_MARKET",quantity=quantity,stopPrice=price,verbose=verbose) #open order close long above price
-#     if verbose:
-#         print(r)
-#     return
-
 def get_account_balance_v2(symbol="",simple=False,verbose=False):
     r = send_signed_request("GET","/fapi/v2/balance")
     if verbose:
