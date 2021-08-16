@@ -9,8 +9,10 @@ from urllib.parse import urlencode
 import sys
 import pprint
 
-KEY = '4Eiv4LT3Ci85P4seGXIV7N4a4JrvUY3zNTar37MvC96HQPFaLaTjqiInv1NznQo6'
-SECRET = 'kZm9NdZ6cnh4q1DildKj7DJJL37K7Si58GvTeBvIgOORsEQ2lle1feCKGtvyMjJE'
+import config
+KEY = config.g_api_key
+SECRET = config.g_secret_key
+
 BASE_URL = 'https://fapi.binance.com' # production base url
 # BASE_URL = 'https://testnet.binancefuture.com' # testnet base url
 
