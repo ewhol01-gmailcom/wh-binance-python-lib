@@ -222,6 +222,33 @@ def get_pair_precisions(pair="DOGEUSDT",verbose=False):
         print("Quote precision =",res["quotePrecision"])
     return res['pricePrecision'], res['quantityPrecision']
 
+def get_candlesticks(symbol="DOGEUSDT",interval="1d",limit=1,workingType="MARK_PRICE/CONTRACT_PRICE",verbose=False):
+    if workingType=="MARK_PRICE/CONTRACT_PRICE":
+        workingType="MARK_PRICE"
+        req = "markPriceKlines"
+    else:
+        req = "klines"
+    params = {
+        "symbol" : symbol,
+        "interval" : interval,
+        "limit" : limit
+    }
+    r = send_signed_request("GET","/fapi/v1/"+req,params)
+    if verbose:
+        print(r)
+    return(r)
+
+def AR(symbol="DOGEUSDT",interval="1d",timeperiod=12,verbose=False): #average range
+    candles = get_candlesticks(limit=timeperiod+1)
+    s = 0
+    for c in candles:
+        s += float(c[2])-float(c[3])
+    s -= float(candles[-1][2])-float(candles[-1][3])
+    return(s/timeperiod)
+
 # print(get_account_balance_v2(symbol="USDT"))
 # pprint.pprint(get_exchange_info()["symbols"])
 # print(get_pair_precisions("DOGEUSDT"))
+
+# print(get_candlesticks(limit=2,interval='4h',workingType="CONTRACT_PRICE"))
+# print(AR(timeperiod=2))
