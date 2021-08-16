@@ -124,32 +124,32 @@ def get_current_price(symbol="DOGEUSDT", verbose=False):
 
 def wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0,quantity=0,workingType="MARK_PRICE/CONTRACT_PRICE",priceProtect="TRUE",verbose=False):
     pricePrecision, quantityPrecision = get_pair_precisions(symbol)
-    cp = get_current_price()
+    cp = get_current_price(symbol=symbol)
     if verbose:
-        print(symbol,side,type,price,quantity,"{:0.0{}f}".format(price,pricePrecision),"{:0.0{}f}".format(quantity,quantityPrecision))
+        print(symbol,cp,side,type,price,quantity,"{:0.0{}f}".format(price,pricePrecision),"{:0.0{}f}".format(quantity,quantityPrecision))
     if side=="BUY":
         if type=="OPEN":
             if price<cp: #open buy below price
-                r = _wh_send_order(symbol="DOGEUSDT",side="BUY",positionSide="LONG",
+                r = _wh_send_order(symbol=symbol,side="BUY",positionSide="LONG",
                     type="TAKE_PROFIT_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
                     verbose=verbose) #open order, buy below price
             elif price>cp: #open buy above price
-                r = _wh_send_order(symbol="DOGEUSDT",side="BUY",positionSide="LONG",
+                r = _wh_send_order(symbol=symbol,side="BUY",positionSide="LONG",
                     type="STOP_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
                     verbose=verbose) #open order, buy above price
         elif type=="CLOSE":
             if price<cp: #close buy below price
-                r = _wh_send_order(symbol="DOGEUSDT",side="BUY",positionSide="SHORT",
+                r = _wh_send_order(symbol=symbol,side="BUY",positionSide="SHORT",
                     type="TAKE_PROFIT_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
                     verbose=verbose) #open order close short below price            
             elif price>cp: #close buy above price
-                r= _wh_send_order(symbol="DOGEUSDT",side="BUY",positionSide="SHORT",
+                r= _wh_send_order(symbol=symbol,side="BUY",positionSide="SHORT",
                     type="STOP_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
@@ -157,26 +157,26 @@ def wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0,quantity=0,wo
     elif side=="SELL":
         if type=="OPEN":
             if price<cp: #open sell below price
-                r = _wh_send_order(symbol="DOGEUSDT",side="SELL",positionSide="SHORT",
+                r = _wh_send_order(symbol=symbol,side="SELL",positionSide="SHORT",
                     type="STOP_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
                     verbose=verbose) #open order, sell below price
             elif price>cp: #open sell above price
-                r = _wh_send_order(symbol="DOGEUSDT",side="SELL",positionSide="SHORT",
+                r = _wh_send_order(symbol=symbol,side="SELL",positionSide="SHORT",
                     type="TAKE_PROFIT_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
                     verbose=verbose) #open order, sell above price
         elif type=="CLOSE":
             if price<cp: #close sell below price
-                r = _wh_send_order(symbol="DOGEUSDT",side="SELL",positionSide="LONG",
+                r = _wh_send_order(symbol=symbol,side="SELL",positionSide="LONG",
                     type="STOP_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
                     verbose=verbose) #open order close long below price
             elif price>cp: #close sell above price
-                r = _wh_send_order(symbol="DOGEUSDT",side="SELL",positionSide="LONG",
+                r = _wh_send_order(symbol=symbol,side="SELL",positionSide="LONG",
                     type="TAKE_PROFIT_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
@@ -243,7 +243,7 @@ def get_candlesticks(symbol="DOGEUSDT",interval="1d",limit=1,workingType="MARK_P
     return(r)
 
 def AR(symbol="DOGEUSDT",interval="1d",timeperiod=12,verbose=False): #average range
-    candles = get_candlesticks(limit=timeperiod+1)
+    candles = get_candlesticks(symbol=symbol, interval=interval, limit=timeperiod+1)
     s = 0
     for c in candles:
         s += float(c[2])-float(c[3])
