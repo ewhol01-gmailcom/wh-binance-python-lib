@@ -6,7 +6,7 @@ import json
 from urllib.parse import urlencode
 
 import sys
-import pprint
+from pprint import pprint
 
 import config
 KEY = config.g_api_key
@@ -134,12 +134,14 @@ def wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0,quantity=0,wo
                     type="TAKE_PROFIT_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
+                    workingType=workingType,
                     verbose=verbose) #open order, buy below price
             elif price>cp: #open buy above price
                 r = _wh_send_order(symbol=symbol,side="BUY",positionSide="LONG",
                     type="STOP_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
+                    workingType=workingType,
                     verbose=verbose) #open order, buy above price
         elif type=="CLOSE":
             if price<cp: #close buy below price
@@ -147,12 +149,14 @@ def wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0,quantity=0,wo
                     type="TAKE_PROFIT_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
+                    workingType=workingType,
                     verbose=verbose) #open order close short below price            
             elif price>cp: #close buy above price
                 r= _wh_send_order(symbol=symbol,side="BUY",positionSide="SHORT",
                     type="STOP_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
+                    workingType=workingType,
                     verbose=verbose) #open order close short above price    elif side=="SELL":
     elif side=="SELL":
         if type=="OPEN":
@@ -161,12 +165,14 @@ def wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0,quantity=0,wo
                     type="STOP_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
+                    workingType=workingType,
                     verbose=verbose) #open order, sell below price
             elif price>cp: #open sell above price
                 r = _wh_send_order(symbol=symbol,side="SELL",positionSide="SHORT",
                     type="TAKE_PROFIT_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
+                    workingType=workingType,
                     verbose=verbose) #open order, sell above price
         elif type=="CLOSE":
             if price<cp: #close sell below price
@@ -174,12 +180,14 @@ def wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0,quantity=0,wo
                     type="STOP_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
+                    workingType=workingType,
                     verbose=verbose) #open order close long below price
             elif price>cp: #close sell above price
                 r = _wh_send_order(symbol=symbol,side="SELL",positionSide="LONG",
                     type="TAKE_PROFIT_MARKET",
                     quantity="{:0.0{}f}".format(quantity,quantityPrecision),
                     stopPrice="{:0.0{}f}".format(price,pricePrecision),
+                    workingType=workingType,
                     verbose=verbose) #open order close long above price
     if verbose:
         print(r)
@@ -249,3 +257,16 @@ def AR(symbol="DOGEUSDT",interval="1d",timeperiod=12,verbose=False): #average ra
         s += float(c[2])-float(c[3])
     s -= float(candles[-1][2])-float(candles[-1][3])
     return(s/timeperiod)
+
+def get_orders(symbol="DOGEUSDT", verbose=False):
+    params = {
+        "symbol" : symbol,
+        "limit" : 5
+    }
+    r = send_signed_request("GET","/fapi/v1/userTrades",params,verbose)
+    if verbose:
+        print(r)
+    return(r)
+
+# pprint(get_orders(symbol='DOGEUSDT',verbose=True))
+# print(wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0.7,quantity=1))
