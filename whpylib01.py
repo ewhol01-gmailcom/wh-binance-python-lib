@@ -241,6 +241,7 @@ def get_candlesticks(symbol="DOGEUSDT",interval="1d",limit=1,workingType="MARK_P
     params = {
         "symbol" : symbol,
         "interval" : interval,
+        "workingType" : workingType,
         "limit" : limit
     }
     r = send_signed_request("GET","/fapi/v1/"+req,params)
