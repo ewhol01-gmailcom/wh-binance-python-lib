@@ -259,15 +259,26 @@ def AR(symbol="DOGEUSDT",interval="1d",timeperiod=12,verbose=False): #average ra
     s -= float(candles[-1][2])-float(candles[-1][3])
     return(s/timeperiod)
 
-def get_orders(symbol="DOGEUSDT", verbose=False):
+def get_open_orders(symbol="DOGEUSDT", verbose=False):
     params = {
         "symbol" : symbol,
         "limit" : 5
     }
-    r = send_signed_request("GET","/fapi/v1/userTrades",params,verbose)
+    r = send_signed_request("GET","/fapi/v1/openOrders",params,verbose)
     if verbose:
         print(r)
     return(r)
 
+def get_order_byId(symbol='', orderId=0, verbose=False):
+    params = {
+        "symbol" : symbol,
+        "orderId" : orderId
+    }
+    r = send_signed_request("GET","/fapi/v1/allOrders",params,verbose)
+    if verbose:
+        print(r)
+    return(r[0])
+
 # pprint(get_orders(symbol='DOGEUSDT',verbose=True))
 # print(wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0.7,quantity=1))
+# print(get_order_byId(symbol='DOGEUSDT',orderId=9091772105)['symbol'])
