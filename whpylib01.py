@@ -288,10 +288,15 @@ def get_input(prompt='', default=''):
         gi = default
         print(' ->',default,sep='')
     dt = type(default)
-    # print(dt,type(gi))
-    if dt!=type(gi):
-        gi = float(gi)
-        # print(dt,type(gi))
+    gt = type(gi)
+    if gt!=dt:
+        ft = type(1.2)
+        bt = type(True)
+        if dt==ft:
+            gi = float(gi)
+        elif dt==bt:
+            gi = gi.upper()
+            gi = True if gi=='TRUE' else False
     return(gi)
 
 # pprint(get_orders(symbol='DOGEUSDT',verbose=True))
@@ -300,3 +305,4 @@ def get_input(prompt='', default=''):
 
 # print(get_input(prompt='Symbol', default='DOGEUSDT'))
 # print(get_input(prompt='Float', default=1.23))
+# print(get_input('Pullback?',False))
