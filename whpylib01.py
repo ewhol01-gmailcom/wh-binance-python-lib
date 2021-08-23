@@ -279,6 +279,24 @@ def get_order_byId(symbol='', orderId=0, verbose=False):
         print(r)
     return(r[0])
 
+def get_input(prompt='', default=''):
+    p = prompt+'('
+    p += default if type(default)=='str' else str(default)
+    p += '):'
+    gi = input(p)
+    if gi=='':
+        gi = default
+        print(' ->',default,sep='')
+    dt = type(default)
+    # print(dt,type(gi))
+    if dt!=type(gi):
+        gi = float(gi)
+        # print(dt,type(gi))
+    return(gi)
+
 # pprint(get_orders(symbol='DOGEUSDT',verbose=True))
 # print(wh_send_order(symbol="DOGEUSDT",side="BUY",type="OPEN",price=0.7,quantity=1))
 # print(get_order_byId(symbol='DOGEUSDT',orderId=9091772105)['symbol'])
+
+# print(get_input(prompt='Symbol', default='DOGEUSDT'))
+# print(get_input(prompt='Float', default=1.23))
